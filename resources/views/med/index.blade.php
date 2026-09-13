@@ -1356,14 +1356,6 @@
         }
     </style>
 <body>
-    @auth
-        <script>
-            // Agar sayt/tab yoki Chrome yopilib qaytadan ochilsa, admin login sahifasiga yo'naltirish
-            if (!sessionStorage.getItem('med_auth_session')) {
-                window.location.replace("{{ route('logout.get') }}");
-            }
-        </script>
-    @endauth
 
     <!-- Top Navigation Bar -->
     <header class="navbar">
@@ -1432,7 +1424,7 @@
                     <!-- Logout Form & Button -->
                     <form action="{{ route('logout') }}" method="POST" style="margin: 0; display: inline;">
                         @csrf
-                        <button type="submit" class="btn-logout" onclick="sessionStorage.removeItem('med_auth_session');" title="Tizimdan chiqish" style="background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.35); color: #fca5a5; border-radius: 8px; padding: 0.45rem 0.75rem; cursor: pointer; display: flex; align-items: center; gap: 0.4rem; font-size: 0.75rem; font-weight: 600; transition: all 0.2s;">
+                        <button type="submit" class="btn-logout" title="Tizimdan chiqish" style="background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.35); color: #fca5a5; border-radius: 8px; padding: 0.45rem 0.75rem; cursor: pointer; display: flex; align-items: center; gap: 0.4rem; font-size: 0.75rem; font-weight: 600; transition: all 0.2s;">
                             <span>🚪</span> Chiqish
                         </button>
                     </form>

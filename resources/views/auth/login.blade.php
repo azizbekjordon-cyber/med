@@ -596,7 +596,7 @@
                             id="nameInput" 
                             name="name" 
                             class="form-input" 
-                            value=""
+                            value="{{ old('name') }}"
                             placeholder="Ism va familiyangizni kiriting"
                             autocomplete="name"
                         >
@@ -621,7 +621,7 @@
                             id="loginInput" 
                             name="login" 
                             class="form-input" 
-                            value=""
+                            value="{{ old('login') }}"
                             placeholder="+998 90 123 45 67 yoki email@med.uz"
                             autocomplete="username"
                         >
@@ -667,7 +667,7 @@
                     </label>
                     <div class="role-selector" id="roleSelectorBox">
                         <div class="role-pill">
-                            <input type="radio" id="roleAdmin" name="role" value="admin">
+                            <input type="radio" id="roleAdmin" name="role" value="admin" checked>
                             <label class="role-label" for="roleAdmin">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
@@ -773,8 +773,10 @@
             if (loginWrap) loginWrap.style.borderColor = '';
             if (loginErr) loginErr.style.display = 'none';
 
-            const val = (loginInput.value || '').replace(/\s+/g, '').toLowerCase();
-            if (val.includes('910226667') || val.includes('admin') || val.includes('azizbek')) {
+            const rawVal = loginInput.value || '';
+            const cleanDigits = rawVal.replace(/[^\d]/g, '');
+            const val = rawVal.replace(/\s+/g, '').toLowerCase();
+            if (cleanDigits.includes('910226667') || cleanDigits.includes('900000000') || val.includes('admin') || val.includes('azizbek')) {
                 const adminRadio = document.getElementById('roleAdmin');
                 if (adminRadio) adminRadio.checked = true;
             }
@@ -872,9 +874,10 @@
 
             // Agar rol tanlanmagan bo'lsa, avtomatik mosini belgilash
             let selectedRole = loginForm.querySelector('input[name="role"]:checked');
+            const cleanDigitsVal = loginVal.replace(/[^\d]/g, '');
             const cleanLogin = loginVal.replace(/\s+/g, '').toLowerCase();
             if (!selectedRole) {
-                if (cleanLogin.includes('910226667') || cleanLogin.includes('admin') || cleanLogin.includes('azizbek')) {
+                if (cleanDigitsVal.includes('910226667') || cleanDigitsVal.includes('900000000') || cleanLogin.includes('admin') || cleanLogin.includes('azizbek')) {
                     const adminRadio = document.getElementById('roleAdmin');
                     if (adminRadio) adminRadio.checked = true;
                 } else {

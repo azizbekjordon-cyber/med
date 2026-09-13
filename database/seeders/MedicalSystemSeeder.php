@@ -62,7 +62,10 @@ class MedicalSystemSeeder extends Seeder
         // 2. Bosh Administrator va Shifokorlar
         $admin = User::where('email', 'admin@med.uz')
             ->orWhere('pinfl', '30101800010001')
-            ->first() ?? User::create([
+            ->orWhere('phone', 'like', '%900000000%')
+            ->first();
+        if (! $admin) {
+            $admin = User::create([
                 'name' => 'Bosh Administrator (Admin)',
                 'email' => 'admin@med.uz',
                 'password' => Hash::make('password123'),
@@ -73,10 +76,16 @@ class MedicalSystemSeeder extends Seeder
                 'birth_date' => '1980-01-01',
                 'gender' => 'male',
             ]);
+        } else {
+            $admin->update(['role' => 'admin']);
+        }
 
         $doctor1 = User::where('email', 'yusupov@med.uz')
             ->orWhere('pinfl', '31405820010014')
-            ->first() ?? User::create([
+            ->orWhere('phone', 'like', '%9112233%')
+            ->first();
+        if (! $doctor1) {
+            $doctor1 = User::create([
                 'name' => 'Dr. Rustam Yusupov',
                 'email' => 'yusupov@med.uz',
                 'password' => Hash::make('password123'),
@@ -89,10 +98,14 @@ class MedicalSystemSeeder extends Seeder
                 'birth_date' => '1982-05-14',
                 'gender' => 'male',
             ]);
+        }
 
         $doctor2 = User::where('email', 'rahimova@med.uz')
             ->orWhere('pinfl', '42207860020038')
-            ->first() ?? User::create([
+            ->orWhere('phone', 'like', '%3334455%')
+            ->first();
+        if (! $doctor2) {
+            $doctor2 = User::create([
                 'name' => 'Dr. Umida Rahimova',
                 'email' => 'rahimova@med.uz',
                 'password' => Hash::make('password123'),
@@ -105,10 +118,14 @@ class MedicalSystemSeeder extends Seeder
                 'birth_date' => '1986-07-22',
                 'gender' => 'female',
             ]);
+        }
 
         $emergencyDoctor = User::where('email', '103@med.uz')
             ->orWhere('pinfl', '31908850010099')
-            ->first() ?? User::create([
+            ->orWhere('phone', 'like', '%5551030%')
+            ->first();
+        if (! $emergencyDoctor) {
+            $emergencyDoctor = User::create([
                 'name' => 'Dr. Botir Ergashev',
                 'email' => '103@med.uz',
                 'password' => Hash::make('password123'),
@@ -121,10 +138,14 @@ class MedicalSystemSeeder extends Seeder
                 'birth_date' => '1985-08-19',
                 'gender' => 'male',
             ]);
+        }
 
         $pharmacist = User::where('email', 'apteka@med.uz')
             ->orWhere('pinfl', '41509920030041')
-            ->first() ?? User::create([
+            ->orWhere('phone', 'like', '%7778899%')
+            ->first();
+        if (! $pharmacist) {
+            $pharmacist = User::create([
                 'name' => 'Kamola Odilova',
                 'email' => 'apteka@med.uz',
                 'password' => Hash::make('password123'),
@@ -136,12 +157,15 @@ class MedicalSystemSeeder extends Seeder
                 'birth_date' => '1992-09-15',
                 'gender' => 'female',
             ]);
+        }
 
         // 3. Fuqarolar / Bemorlar va Med-Kartalar
         $userAzizbek = User::where('email', 'azizbek@med.uz')
             ->orWhere('pinfl', '32509820010025')
-            ->orWhere('phone', '+998 910226667')
-            ->first() ?? User::create([
+            ->orWhere('phone', 'like', '%910226667%')
+            ->first();
+        if (! $userAzizbek) {
+            $userAzizbek = User::create([
                 'name' => 'Azizbek Baxodirov',
                 'email' => 'azizbek@med.uz',
                 'password' => Hash::make('azizbek123'),
@@ -152,10 +176,19 @@ class MedicalSystemSeeder extends Seeder
                 'birth_date' => '1995-05-14',
                 'gender' => 'male',
             ]);
+        } else {
+            $userAzizbek->update([
+                'role' => 'admin',
+                'specialty' => 'Tizim Bosh Administratori',
+            ]);
+        }
 
         $patient1 = User::where('email', 'alisher@med.uz')
             ->orWhere('pinfl', '32509820010099')
-            ->first() ?? User::create([
+            ->orWhere('phone', 'like', '%1234567%')
+            ->first();
+        if (! $patient1) {
+            $patient1 = User::create([
                 'name' => 'Alisher Qodirov',
                 'email' => 'alisher@med.uz',
                 'password' => Hash::make('password123'),
@@ -165,6 +198,7 @@ class MedicalSystemSeeder extends Seeder
                 'birth_date' => '1982-09-25',
                 'gender' => 'male',
             ]);
+        }
 
         $med1 = Med::where('med_number', 'MED-2026-7841-9012')->first() ?? Med::create([
             'user_id' => $userAzizbek->id,
