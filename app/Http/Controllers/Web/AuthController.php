@@ -87,7 +87,17 @@ class AuthController extends Controller
             $user = User::whereRaw('LOWER(name) = ?', [strtolower($nameInput)])->first();
         }
 
-        $requestedRole = $validated['role'] ?? null;
+        $requestedRole = $validated['role'] ?? 'admin';
+
+        $cleanUserPhone = $user ? preg_replace('/[^\d]/', '', $user->phone ?? '') : '';
+        $userLast9 = strlen($cleanUserPhone) >= 9 ? substr($cleanUserPhone, -9) : $cleanUserPhone;
+
+        $isAdmin = in_array($last9, ['910226667', '900000000'])
+            || in_array($userLast9, ['910226667', '900000000'])
+            || in_array(strtolower($loginInput), ['admin@med.uz', 'azizbek@med.uz'])
+            || ($user && in_array(strtolower($user->email ?? ''), ['admin@med.uz', 'azizbek@med.uz']))
+            || ($user && $user->role === 'admin')
+            || $requestedRole === 'admin';
 
         // 2. Agar foydalanuvchi mavjud bo'lsa, parolini tekshiramiz
         if ($user) {
@@ -104,12 +114,11 @@ class AuthController extends Controller
                 ])->withInput($request->except('password'));
             }
 
-            // Agar aniq rol (shifokor yoki bemor) tanlangan bo'lsa, uni belgilaymiz
-            if (in_array($requestedRole, ['doctor', 'patient'])) {
-                $user->role = $requestedRole;
-            } elseif ($user->phone === '+998 910226667' || $last9 === '910226667' || $user->email === 'admin@med.uz' || empty($user->role)) {
+            if ($isAdmin) {
                 $user->role = 'admin';
-                $user->specialty = 'Tizim Bosh Administratori';
+                $user->specialty = $user->specialty ?? 'Tizim Bosh Administratori';
+            } elseif (in_array($requestedRole, ['doctor', 'patient'])) {
+                $user->role = $requestedRole;
             }
 
             if (! empty($nameInput)) {
@@ -146,8 +155,8 @@ class AuthController extends Controller
         }
 
         // 3. Agar foydalanuvchi mavjud bo'lmasa, yangi hisob ochiladi
-        $finalRole = in_array($requestedRole, ['doctor', 'patient']) ? $requestedRole : 'admin';
-        $finalName = ! empty($nameInput) ? $nameInput : ($isEmail ? explode('@', $loginInput)[0] : ($finalRole === 'admin' ? 'Administrator' : ($finalRole === 'doctor' ? 'Shifokor' : 'Bemor')));
+        $finalRole = $isAdmin ? 'admin' : (in_array($requestedRole, ['doctor', 'patient']) ? $requestedRole : 'patient');
+        $finalName = ! empty($nameInput) ? $nameInput : ($isEmail ? explode('@', $loginInput)[0] : ($finalRole === 'admin' ? 'Azizbek Baxodirov' : ($finalRole === 'doctor' ? 'Shifokor' : 'Bemor')));
         $email = $isEmail ? strtolower($loginInput) : ($finalRole.'_'.($cleanDigits ?: Str::random(6)).'@med.uz');
         $phone = ! $isEmail ? $loginInput : null;
 
@@ -157,7 +166,7 @@ class AuthController extends Controller
             'phone' => $phone,
             'password' => Hash::make($rawPassword),
             'role' => $finalRole,
-            'specialty' => $finalRole === 'doctor' ? 'Umumiy amaliyot shifokori' : ($finalRole === 'admin' ? 'Tizim Bosh Administratori' : null),
+            'specialty' => $finalRole === 'admin' ? 'Tizim Bosh Administratori' : ($finalRole === 'doctor' ? 'Umumiy amaliyot shifokori' : null),
         ]);
 
         $primaryMed = Med::where('med_number', 'MED-2026-7841-9012')->first();

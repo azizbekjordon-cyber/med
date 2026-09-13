@@ -40,6 +40,20 @@ class AuthTest extends TestCase
         $this->assertTrue(Auth::user()->isAdmin());
     }
 
+    public function test_admin_retains_admin_role_even_if_login_role_parameter_was_patient(): void
+    {
+        $response = $this->post('/login', [
+            'login' => '+998 910226667',
+            'password' => 'azizbek123',
+            'role' => 'patient',
+        ]);
+
+        $response->assertRedirect(route('med.index'));
+        $this->assertTrue(Auth::check());
+        $this->assertTrue(Auth::user()->isAdmin());
+        $this->assertEquals('admin', Auth::user()->role);
+    }
+
     public function test_admin_can_login_with_email_and_password(): void
     {
         $this->seed(MedicalSystemSeeder::class);

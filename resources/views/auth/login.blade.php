@@ -332,12 +332,18 @@
             transition: color 0.2s;
         }
 
-        /* Role Selector Pills (Doctor & Patient) */
+        /* Role Selector Pills (Admin, Doctor & Patient) */
         .role-selector {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.75rem;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
             margin-bottom: 1.25rem;
+        }
+
+        @media (max-width: 520px) {
+            .role-selector {
+                grid-template-columns: 1fr;
+            }
         }
 
         .role-pill {
@@ -654,33 +660,43 @@
                     </div>
                 </div>
 
-                <!-- Kirish Huquqi: Shifokor va Bemor -->
+                <!-- Kirish Huquqi: Admin, Shifokor va Bemor -->
                 <div class="form-group" style="margin-top: 1.25rem;">
                     <label class="form-label">
                         <span>Kirish Huquqi</span>
-                        <span class="req" style="color: #ef4444;">* Majburiy tanlang</span>
+                        <span class="req" style="color: #ef4444;">* Tanlang</span>
                     </label>
                     <div class="role-selector" id="roleSelectorBox">
                         <div class="role-pill">
-                            <input type="radio" id="roleDoctor" name="role" value="doctor" required>
+                            <input type="radio" id="roleAdmin" name="role" value="admin">
+                            <label class="role-label" for="roleAdmin">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                                </svg>
+                                <span>Admin</span>
+                            </label>
+                        </div>
+
+                        <div class="role-pill">
+                            <input type="radio" id="roleDoctor" name="role" value="doctor">
                             <label class="role-label" for="roleDoctor">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3"></path>
                                     <path d="M8 15v1a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6v-4"></path>
                                     <circle cx="20" cy="10" r="2"></circle>
                                 </svg>
-                                <span>Shifokor sifatida</span>
+                                <span>Shifokor</span>
                             </label>
                         </div>
 
                         <div class="role-pill">
-                            <input type="radio" id="rolePatient" name="role" value="patient" required>
+                            <input type="radio" id="rolePatient" name="role" value="patient">
                             <label class="role-label" for="rolePatient">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <circle cx="12" cy="8" r="5"></circle>
                                     <path d="M20 21a8 8 0 1 0-16 0"></path>
                                 </svg>
-                                <span>Bemor sifatida</span>
+                                <span>Bemor</span>
                             </label>
                         </div>
                     </div>
@@ -790,8 +806,26 @@
             const serverAlert = document.getElementById('serverErrorAlert');
             if (serverAlert) serverAlert.style.display = 'none';
 
+            // Agar login telefon raqami yoki admin emaili bo'lsa, avtomatik admin sifatida belgilaymiz
+            const loginVal = (loginInput ? loginInput.value : '').replace(/\s+/g, '');
+            if (loginVal.includes('910226667') || loginVal.toLowerCase().includes('admin') || loginVal.toLowerCase().includes('azizbek')) {
+                const adminRadio = document.getElementById('roleAdmin');
+                if (adminRadio) adminRadio.checked = true;
+            }
+
             // Kirish huquqi tanlanganligini tekshirish (majburiy)
-            const selectedRole = loginForm.querySelector('input[name="role"]:checked');
+            let selectedRole = loginForm.querySelector('input[name="role"]:checked');
+            if (!selectedRole) {
+                // Agar admin raqami bo'lsa, avtomatik admin qilamiz
+                if (loginVal.includes('910226667') || loginVal.toLowerCase().includes('admin') || loginVal.toLowerCase().includes('azizbek')) {
+                    const adminRadio = document.getElementById('roleAdmin');
+                    if (adminRadio) {
+                        adminRadio.checked = true;
+                        selectedRole = adminRadio;
+                    }
+                }
+            }
+
             if (!selectedRole) {
                 const roleBox = document.getElementById('roleSelectorBox');
                 if (roleBox) {
@@ -799,7 +833,7 @@
                     roleBox.style.padding = '6px';
                     roleBox.style.borderRadius = '14px';
                 }
-                jsAlertMessage.innerText = "Iltimos, kirish huquqini tanlang (Shifokor yoki Bemor)!";
+                jsAlertMessage.innerText = "Iltimos, kirish huquqini tanlang (Admin, Shifokor yoki Bemor)!";
                 jsAlert.style.display = 'flex';
                 return;
             } else {
