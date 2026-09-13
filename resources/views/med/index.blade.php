@@ -2164,7 +2164,7 @@
                                 <span>⏰</span> Kunlik Dori Ichish Jadvali (Pill Tracker)
                             </h3>
                             <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 2px;">
-                                Bugun: <strong style="color: var(--primary-light);">{{ date('d.m.Y') }} yil</strong> | Bemor: {{ $activeMed->user->name }}
+                                Bugun: <strong style="color: var(--primary-light);">{{ date('d.m.Y') }} yil</strong> | Bemor: {{ $activeMed->user?->name ?? 'Bemor' }}
                             </p>
                         </div>
                         <div style="text-align: right;">
@@ -2387,7 +2387,7 @@
         <div class="modal-box">
             <button type="button" class="modal-close" onclick="closeModal('addRecordModal')">&times;</button>
             <h2 style="font-size: 1.35rem; margin-bottom: 0.4rem;">Tibbiy Ko'rik va Tashxis Qo'shish</h2>
-            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.5rem;">Med-karta: {{ $activeMed->med_number }} ({{ $activeMed->user->name }})</p>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.5rem;">Med-karta: {{ $activeMed->med_number }} ({{ $activeMed->user?->name ?? 'Bemor' }})</p>
 
             <form action="{{ route('med.addRecord', ['medNumber' => $activeMed->med_number]) }}" method="POST">
                 @csrf
@@ -2458,7 +2458,7 @@
         <div class="modal-box">
             <button type="button" class="modal-close" onclick="closeModal('addPrescriptionModal')">&times;</button>
             <h2 style="font-size: 1.35rem; margin-bottom: 0.4rem;">Elektron Retsept Yozish</h2>
-            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.5rem;">Med-karta: {{ $activeMed->med_number }} ({{ $activeMed->user->name }})</p>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.5rem;">Med-karta: {{ $activeMed->med_number }} ({{ $activeMed->user?->name ?? 'Bemor' }})</p>
 
             <form action="{{ route('med.addPrescription', ['medNumber' => $activeMed->med_number]) }}" method="POST">
                 @csrf
@@ -2510,7 +2510,7 @@
         <div class="modal-box">
             <button type="button" class="modal-close" onclick="closeModal('addAnalysisModal')">&times;</button>
             <h2 style="font-size: 1.35rem; margin-bottom: 0.4rem;">Laboratoriya / Diagnostika Tahlili Kiritish</h2>
-            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.5rem;">Med-karta: {{ $activeMed->med_number }} ({{ $activeMed->user->name }})</p>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.5rem;">Med-karta: {{ $activeMed->med_number }} ({{ $activeMed->user?->name ?? 'Bemor' }})</p>
 
             <form action="{{ route('med.addAnalysis', ['medNumber' => $activeMed->med_number]) }}" method="POST">
                 @csrf
@@ -2583,7 +2583,7 @@
         <div class="modal-box">
             <button type="button" class="modal-close" onclick="closeModal('addVaccinationModal')">&times;</button>
             <h2 style="font-size: 1.35rem; margin-bottom: 0.4rem;">Yangi Emlashni Qayd Qilish</h2>
-            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.5rem;">Med-karta: {{ $activeMed->med_number }} ({{ $activeMed->user->name }})</p>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.5rem;">Med-karta: {{ $activeMed->med_number }} ({{ $activeMed->user?->name ?? 'Bemor' }})</p>
 
             <form action="{{ route('med.addVaccination', ['medNumber' => $activeMed->med_number]) }}" method="POST">
                 @csrf
@@ -2655,7 +2655,7 @@
         <div class="modal-box">
             <button type="button" class="modal-close" onclick="closeModal('addReferralModal')">&times;</button>
             <h2 style="font-size: 1.35rem; margin-bottom: 0.4rem;">Rasmiy Tibbiy Yo'llanma Berish</h2>
-            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.5rem;">Med-karta: {{ $activeMed->med_number }} ({{ $activeMed->user->name }})</p>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.5rem;">Med-karta: {{ $activeMed->med_number }} ({{ $activeMed->user?->name ?? 'Bemor' }})</p>
 
             <form action="{{ route('med.addReferral', ['medNumber' => $activeMed->med_number]) }}" method="POST">
                 @csrf
@@ -2730,7 +2730,7 @@
             </div>
             <h2 style="font-size: 1.35rem; color: #fff; margin-bottom: 0.25rem;">Raqamli Med-Karta QR-Kodi</h2>
             <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1rem;">
-                {{ $activeMed->user->name }} | {{ $activeMed->med_number }}
+                {{ $activeMed->user?->name ?? 'Bemor' }} | {{ $activeMed->med_number }}
             </p>
 
             <div id="qrImgBox" onclick="toggleQrZoom()" title="Kattalashtirish / Kichraytirish uchun bosing" style="background: #fff; padding: 1.25rem; border-radius: 18px; display: inline-block; box-shadow: 0 15px 35px rgba(0,0,0,0.6); margin-bottom: 0.75rem; cursor: zoom-in; transition: all 0.3s ease;">
@@ -2780,7 +2780,7 @@
                 <div>
                     <h2 style="font-size: 1.3rem; color: #fff;">Online Shifokorga Navbat Olish</h2>
                     <p style="font-size: 0.78rem; color: var(--text-muted);">
-                        Bemor: <strong style="color: #fff;">{{ $activeMed->user->name }}</strong> ({{ $activeMed->med_number }})
+                        Bemor: <strong style="color: #fff;">{{ $activeMed->user?->name ?? 'Bemor' }}</strong> ({{ $activeMed->med_number }})
                     </p>
                 </div>
             </div>
@@ -2887,7 +2887,7 @@
                 </div>
 
                 <div style="font-size: 0.82rem; line-height: 1.7; color: #cbd5e1; margin-bottom: 1rem;">
-                    <div><strong>Bemor:</strong> <span id="modalPatientName">{{ $activeMed->user->name }}</span></div>
+                    <div><strong>Bemor:</strong> <span id="modalPatientName">{{ $activeMed->user?->name ?? 'Bemor' }}</span></div>
                     <div><strong>Shifokor:</strong> <span id="modalDoctorName">Dr. Rustam Yusupov</span></div>
                     <div><strong>Mutaxassislik:</strong> <span id="modalSpecialty">Kardiolog</span></div>
                     <div><strong>Shifoxona:</strong> <span id="modalClinic">Markaziy Shifoxona</span></div>
@@ -2990,11 +2990,11 @@
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; background: rgba(2, 132, 199, 0.1); border: 1px solid rgba(56, 189, 248, 0.2); border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1.25rem; font-size: 0.85rem;">
                     <div>
                         <div style="font-size: 0.72rem; color: var(--text-dim); text-transform: uppercase;">Fuqaro / Bemor:</div>
-                        <div style="font-weight: 800; font-size: 1.05rem; color: #fff;">{{ $activeMed->user->name }}</div>
+                        <div style="font-weight: 800; font-size: 1.05rem; color: #fff;">{{ $activeMed->user?->name ?? 'Bemor' }}</div>
                     </div>
                     <div>
                         <div style="font-size: 0.72rem; color: var(--text-dim); text-transform: uppercase;">JSHSHIR (PINFL):</div>
-                        <div style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #38bdf8;">{{ $activeMed->user->pinfl ?? '32509820010025' }}</div>
+                        <div style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #38bdf8;">{{ $activeMed->user?->pinfl ?? '32509820010025' }}</div>
                     </div>
                     <div>
                         <div style="font-size: 0.72rem; color: var(--text-dim); text-transform: uppercase;">Qon Guruhi & Rh:</div>
