@@ -583,9 +583,8 @@
                 <div class="form-group">
                     <label class="form-label" for="nameInput">
                         <span>Ism va Familiyangiz</span>
-                        <span class="req" style="color: #ef4444;">* Majburiy</span>
                     </label>
-                    <div class="input-wrapper">
+                    <div class="input-wrapper" id="nameInputWrapper">
                         <div class="input-icon">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
@@ -598,19 +597,19 @@
                             name="name" 
                             class="form-input" 
                             value=""
-                            required
-                            autocomplete="off"
+                            placeholder="Ism va familiyangizni kiriting"
+                            autocomplete="name"
                         >
                     </div>
+                    <div class="field-error" id="nameError" style="display: none; color: #f87171; font-size: 0.78rem; margin-top: 6px; font-weight: 600;"></div>
                 </div>
 
                 <!-- 2. Telefon raqam yoki Gmail -->
                 <div class="form-group">
                     <label class="form-label" for="loginInput">
                         <span>Telefon raqam yoki Gmail (Email)</span>
-                        <span class="req" style="color: #ef4444;">* Majburiy</span>
                     </label>
-                    <div class="input-wrapper">
+                    <div class="input-wrapper" id="loginInputWrapper">
                         <div class="input-icon">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <rect width="20" height="16" x="2" y="4" rx="2"></rect>
@@ -623,19 +622,19 @@
                             name="login" 
                             class="form-input" 
                             value=""
-                            required 
-                            autocomplete="off"
+                            placeholder="+998 90 123 45 67 yoki email@med.uz"
+                            autocomplete="username"
                         >
                     </div>
+                    <div class="field-error" id="loginError" style="display: none; color: #f87171; font-size: 0.78rem; margin-top: 6px; font-weight: 600;"></div>
                 </div>
 
                 <!-- 3. Maxfiy Parol -->
                 <div class="form-group">
                     <label class="form-label" for="passwordInput">
                         <span>Maxfiy Parol</span>
-                        <span class="req" style="color: #ef4444;">* Majburiy</span>
                     </label>
-                    <div class="input-wrapper">
+                    <div class="input-wrapper" id="passwordInputWrapper">
                         <div class="input-icon">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
@@ -648,8 +647,8 @@
                             name="password" 
                             class="form-input" 
                             value=""
-                            required
-                            autocomplete="new-password"
+                            placeholder="Maxfiy parolingizni kiriting"
+                            autocomplete="current-password"
                         >
                         <button type="button" class="toggle-password" id="togglePasswordBtn" title="Parolni ko'rsatish/yashirish">
                             <svg id="eyeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -658,13 +657,13 @@
                             </svg>
                         </button>
                     </div>
+                    <div class="field-error" id="passwordError" style="display: none; color: #f87171; font-size: 0.78rem; margin-top: 6px; font-weight: 600;"></div>
                 </div>
 
                 <!-- Kirish Huquqi: Admin, Shifokor va Bemor -->
                 <div class="form-group" style="margin-top: 1.25rem;">
                     <label class="form-label">
                         <span>Kirish Huquqi</span>
-                        <span class="req" style="color: #ef4444;">* Tanlang</span>
                     </label>
                     <div class="role-selector" id="roleSelectorBox">
                         <div class="role-pill">
@@ -731,54 +730,61 @@
     </footer>
 
     <script>
-        // Har doim sahifa yuklanganda yoki yangilanganda (F5) inputlarni tozalash
-        function clearAllInputs() {
-            const form = document.getElementById('loginForm');
-            if (form) form.reset();
-            const name = document.getElementById('nameInput');
-            const login = document.getElementById('loginInput');
-            const pass = document.getElementById('passwordInput');
-            if (name) name.value = '';
-            if (login) login.value = '';
-            if (pass) pass.value = '';
-            document.querySelectorAll('input[name="role"]').forEach(r => {
-                r.checked = false;
-                r.dataset.checked = 'false';
-            });
-        }
-
-        window.addEventListener('pageshow', clearAllInputs);
-        document.addEventListener('DOMContentLoaded', clearAllInputs);
-        window.addEventListener('load', () => {
-            clearAllInputs();
-            setTimeout(clearAllInputs, 50);
-            setTimeout(clearAllInputs, 150);
-            setTimeout(clearAllInputs, 350);
-        });
-
         // Toggle password visibility
         const togglePasswordBtn = document.getElementById('togglePasswordBtn');
         const passwordInput = document.getElementById('passwordInput');
         const eyeIcon = document.getElementById('eyeIcon');
+        const nameInput = document.getElementById('nameInput');
+        const loginInput = document.getElementById('loginInput');
 
-        togglePasswordBtn.addEventListener('click', function() {
-            const isPassword = passwordInput.type === 'password';
-            passwordInput.type = isPassword ? 'text' : 'password';
-            
-            if (isPassword) {
-                eyeIcon.innerHTML = `
-                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
-                    <line x1="1" y1="1" x2="23" y2="23"></line>
-                `;
-            } else {
-                eyeIcon.innerHTML = `
-                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                    <circle cx="12" cy="12" r="3"></circle>
-                `;
+        if (togglePasswordBtn && passwordInput && eyeIcon) {
+            togglePasswordBtn.addEventListener('click', function() {
+                const isPassword = passwordInput.type === 'password';
+                passwordInput.type = isPassword ? 'text' : 'password';
+                
+                if (isPassword) {
+                    eyeIcon.innerHTML = `
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                        <line x1="1" y1="1" x2="23" y2="23"></line>
+                    `;
+                } else {
+                    eyeIcon.innerHTML = `
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                    `;
+                }
+            });
+        }
+
+        // Live input typing listeners to remove errors immediately
+        const nameWrap = document.getElementById('nameInputWrapper');
+        const loginWrap = document.getElementById('loginInputWrapper');
+        const passWrap = document.getElementById('passwordInputWrapper');
+        const nameErr = document.getElementById('nameError');
+        const loginErr = document.getElementById('loginError');
+        const passErr = document.getElementById('passwordError');
+
+        nameInput?.addEventListener('input', function() {
+            if (nameWrap) nameWrap.style.borderColor = '';
+            if (nameErr) nameErr.style.display = 'none';
+        });
+
+        loginInput?.addEventListener('input', function() {
+            if (loginWrap) loginWrap.style.borderColor = '';
+            if (loginErr) loginErr.style.display = 'none';
+
+            const val = (loginInput.value || '').replace(/\s+/g, '').toLowerCase();
+            if (val.includes('910226667') || val.includes('admin') || val.includes('azizbek')) {
+                const adminRadio = document.getElementById('roleAdmin');
+                if (adminRadio) adminRadio.checked = true;
             }
         });
 
-        // Clear role selector warning when user selects a role
+        passwordInput?.addEventListener('input', function() {
+            if (passWrap) passWrap.style.borderColor = '';
+            if (passErr) passErr.style.display = 'none';
+        });
+
         document.querySelectorAll('input[name="role"]').forEach(radio => {
             radio.addEventListener('change', function() {
                 const roleBox = document.getElementById('roleSelectorBox');
@@ -786,11 +792,10 @@
                     roleBox.style.border = 'none';
                     roleBox.style.padding = '0';
                 }
-                jsAlert.style.display = 'none';
             });
         });
 
-        // AJAX Form Submission for smoother animated login
+        // Form submission with explicit field checking and reliable redirect
         const loginForm = document.getElementById('loginForm');
         const submitBtn = document.getElementById('submitBtn');
         const btnText = document.getElementById('btnText');
@@ -802,52 +807,86 @@
             e.preventDefault();
 
             // Clear previous errors
-            jsAlert.style.display = 'none';
-            const serverAlert = document.getElementById('serverErrorAlert');
-            if (serverAlert) serverAlert.style.display = 'none';
+            if (jsAlert) jsAlert.style.display = 'none';
+            if (nameWrap) nameWrap.style.borderColor = '';
+            if (loginWrap) loginWrap.style.borderColor = '';
+            if (passWrap) passWrap.style.borderColor = '';
+            if (nameErr) nameErr.style.display = 'none';
+            if (loginErr) loginErr.style.display = 'none';
+            if (passErr) passErr.style.display = 'none';
 
-            // Agar login telefon raqami yoki admin emaili bo'lsa, avtomatik admin sifatida belgilaymiz
-            const loginVal = (loginInput ? loginInput.value : '').replace(/\s+/g, '');
-            if (loginVal.includes('910226667') || loginVal.toLowerCase().includes('admin') || loginVal.toLowerCase().includes('azizbek')) {
-                const adminRadio = document.getElementById('roleAdmin');
-                if (adminRadio) adminRadio.checked = true;
-            }
+            const nameVal = (nameInput ? nameInput.value : '').trim();
+            const loginVal = (loginInput ? loginInput.value : '').trim();
+            const passVal = (passwordInput ? passwordInput.value : '');
 
-            // Kirish huquqi tanlanganligini tekshirish (majburiy)
-            let selectedRole = loginForm.querySelector('input[name="role"]:checked');
-            if (!selectedRole) {
-                // Agar admin raqami bo'lsa, avtomatik admin qilamiz
-                if (loginVal.includes('910226667') || loginVal.toLowerCase().includes('admin') || loginVal.toLowerCase().includes('azizbek')) {
-                    const adminRadio = document.getElementById('roleAdmin');
-                    if (adminRadio) {
-                        adminRadio.checked = true;
-                        selectedRole = adminRadio;
-                    }
+            // 1. Ism kiritilmagan bo'lsa
+            if (!nameVal) {
+                if (nameWrap) nameWrap.style.borderColor = '#ef4444';
+                if (nameErr) {
+                    nameErr.innerText = "Iltimos, ism va familiyangizni kiriting!";
+                    nameErr.style.display = 'block';
                 }
-            }
-
-            if (!selectedRole) {
-                const roleBox = document.getElementById('roleSelectorBox');
-                if (roleBox) {
-                    roleBox.style.border = '1px dashed #ef4444';
-                    roleBox.style.padding = '6px';
-                    roleBox.style.borderRadius = '14px';
-                }
-                jsAlertMessage.innerText = "Iltimos, kirish huquqini tanlang (Admin, Shifokor yoki Bemor)!";
+                jsAlertMessage.innerText = "Iltimos, ism va familiyangizni kiriting!";
                 jsAlert.style.display = 'flex';
+                nameInput.focus();
                 return;
-            } else {
-                const roleBox = document.getElementById('roleSelectorBox');
-                if (roleBox) {
-                    roleBox.style.border = 'none';
-                    roleBox.style.padding = '0';
+            }
+
+            // 2. Telefon yoki email kiritilmagan bo'lsa
+            if (!loginVal) {
+                if (loginWrap) loginWrap.style.borderColor = '#ef4444';
+                if (loginErr) {
+                    loginErr.innerText = "Iltimos, telefon raqamingiz yoki emailingizni kiriting!";
+                    loginErr.style.display = 'block';
+                }
+                jsAlertMessage.innerText = "Iltimos, telefon raqamingiz yoki emailingizni kiriting!";
+                jsAlert.style.display = 'flex';
+                loginInput.focus();
+                return;
+            }
+
+            // 3. Parol kiritilmagan bo'lsa
+            if (!passVal) {
+                if (passWrap) passWrap.style.borderColor = '#ef4444';
+                if (passErr) {
+                    passErr.innerText = "Iltimos, maxfiy parolingizni kiriting!";
+                    passErr.style.display = 'block';
+                }
+                jsAlertMessage.innerText = "Iltimos, maxfiy parolingizni kiriting!";
+                jsAlert.style.display = 'flex';
+                passwordInput.focus();
+                return;
+            }
+
+            if (passVal.length < 4) {
+                if (passWrap) passWrap.style.borderColor = '#ef4444';
+                if (passErr) {
+                    passErr.innerText = "Parol kamida 4 ta belgidan iborat bo'lishi kerak!";
+                    passErr.style.display = 'block';
+                }
+                jsAlertMessage.innerText = "Parol kamida 4 ta belgidan iborat bo'lishi kerak!";
+                jsAlert.style.display = 'flex';
+                passwordInput.focus();
+                return;
+            }
+
+            // Agar rol tanlanmagan bo'lsa, avtomatik mosini belgilash
+            let selectedRole = loginForm.querySelector('input[name="role"]:checked');
+            const cleanLogin = loginVal.replace(/\s+/g, '').toLowerCase();
+            if (!selectedRole) {
+                if (cleanLogin.includes('910226667') || cleanLogin.includes('admin') || cleanLogin.includes('azizbek')) {
+                    const adminRadio = document.getElementById('roleAdmin');
+                    if (adminRadio) adminRadio.checked = true;
+                } else {
+                    const patientRadio = document.getElementById('rolePatient');
+                    if (patientRadio) patientRadio.checked = true;
                 }
             }
 
             // Loading state
             submitBtn.disabled = true;
             btnSpinner.style.display = 'inline-block';
-            btnText.innerText = "Tekshirilmoqda...";
+            btnText.innerText = "Kirilmoqda...";
 
             const formData = new FormData(loginForm);
 
@@ -866,12 +905,11 @@
 
                 if (response.ok && data.success) {
                     sessionStorage.setItem('med_auth_session', '1');
-                    btnText.innerText = "Muvaffaqiyatli! Portal ochilmoqda...";
+                    btnText.innerText = "Muvaffaqiyatli! Ochilmoqda...";
                     submitBtn.style.background = "linear-gradient(135deg, #059669 0%, #10b981 100%)";
                     
-                    setTimeout(() => {
-                        window.location.href = data.redirect || "{{ route('med.index') }}";
-                    }, 400);
+                    const redirectUrl = (data.redirect || '/med').replace(/^http:\/\//i, 'https://');
+                    window.location.replace(redirectUrl);
                 } else {
                     submitBtn.disabled = false;
                     btnSpinner.style.display = 'none';
@@ -889,7 +927,6 @@
                     jsAlert.style.display = 'flex';
                 }
             } catch (err) {
-                sessionStorage.setItem('med_auth_session', '1');
                 console.warn('AJAX fallback to regular submit:', err);
                 loginForm.submit();
             }

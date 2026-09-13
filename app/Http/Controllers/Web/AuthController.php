@@ -49,11 +49,11 @@ class AuthController extends Controller
             'role' => 'required|string|in:doctor,patient,admin',
             'remember' => 'nullable|boolean',
         ], [
-            'login.required' => 'Telefon raqamingiz yoki Gmail/Email manzilingizni kiriting.',
-            'password.required' => 'Maxfiy parolingizni kiriting.',
+            'login.required' => 'Iltimos, telefon raqamingiz yoki emailingizni kiriting!',
+            'password.required' => 'Iltimos, maxfiy parolingizni kiriting!',
             'password.min' => 'Parol kamida 4 ta belgidan iborat bo\'lishi kerak.',
-            'role.required' => 'Iltimos, kirish huquqini tanlang (Shifokor yoki Bemor)!',
-            'role.in' => 'Kirish huquqi faqat Shifokor yoki Bemor bo\'lishi kerak.',
+            'role.required' => 'Iltimos, kirish huquqini tanlang (Admin, Shifokor yoki Bemor)!',
+            'role.in' => 'Kirish huquqi faqat Admin, Shifokor yoki Bemor bo\'lishi kerak.',
         ]);
 
         $loginInput = trim($validated['login']);
