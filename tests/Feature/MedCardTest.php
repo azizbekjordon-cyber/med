@@ -27,6 +27,20 @@ class MedCardTest extends TestCase
         $response->assertSee('Tibbiy Karta');
     }
 
+    public function test_med_portal_loads_successfully_without_prior_seeding(): void
+    {
+        $this->assertEquals(0, Med::count());
+
+        $user = User::factory()->create(['role' => 'admin']);
+        $this->actingAs($user);
+
+        $response = $this->get('/med');
+
+        $response->assertStatus(200);
+        $response->assertSee('MED');
+        $this->assertGreaterThan(0, Med::count());
+    }
+
     public function test_emergency_103_triage_api_returns_critical_patient_data(): void
     {
         $user = User::factory()->create(['name' => 'Rustam Aliyev']);

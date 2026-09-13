@@ -10,11 +10,14 @@ use App\Models\MedAnalysis;
 use App\Models\MedPrescription;
 use App\Models\MedRecord;
 use App\Models\User;
+use Database\Seeders\MedicalSystemSeeder;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class MedPortalController extends Controller
@@ -24,36 +27,85 @@ class MedPortalController extends Controller
      */
     public function index(Request $request): View
     {
-        $selectedMedNumber = $request->query('med', 'MED-2026-7841-9012');
-
-        if (Auth::check()) {
-            $currentUser = Auth::user();
-            $primaryMed = Med::where('med_number', 'MED-2026-7841-9012')->first();
-            if ($primaryMed && $primaryMed->user_id !== $currentUser->id) {
-                $primaryMed->user_id = $currentUser->id;
-                $primaryMed->save();
+        // 1. Agar bazada med kartalar mavjud bo'lmasa (masalan yangi server / Railway),
+        // tizimni avtomatik ravishda boshlang'ich ma'lumotlar bilan to'ldiramiz.
+        if (Med::count() === 0) {
+            try {
+                (new MedicalSystemSeeder)->run();
+            } catch (\Throwable $e) {
+                Log::warning('Medical system auto-seeding failed: '.$e->getMessage());
             }
         }
 
-        $activeMed = Med::where('med_number', $selectedMedNumber)
-            ->with([
-                'user',
-                'records.doctor',
-                'records.clinic',
-                'prescriptions.doctor',
-                'prescriptions.pharmacy',
-                'analyses.doctor',
-                'analyses.clinic',
-                'vaccinations.doctor',
-                'vaccinations.clinic',
-                'referrals.referringDoctor',
-                'referrals.referringClinic',
-                'referrals.targetClinic',
-                'accessLogs.user',
-                'appointments.doctor.clinic',
-                'appointments.clinic',
-            ])
-            ->first() ?? Med::with(['user', 'records', 'prescriptions', 'vaccinations', 'referrals', 'appointments.doctor'])->first();
+        $currentUser = Auth::user();
+
+        // 2. Agar foydalanuvchi tizimga kirgan bo'lsa va unda karta yo'q bo'lsa
+        if ($currentUser) {
+            $userHasMed = Med::where('user_id', $currentUser->id)->exists();
+            if (! $userHasMed) {
+                $primaryMed = Med::where('med_number', 'MED-2026-7841-9012')->first();
+                if ($primaryMed && (empty($primaryMed->user_id) || $primaryMed->user_id !== $currentUser->id)) {
+                    $primaryMed->user_id = $currentUser->id;
+                    $primaryMed->save();
+                }
+            }
+        }
+
+        $selectedMedNumber = $request->query('med');
+
+        $activeMed = null;
+        if (! empty($selectedMedNumber)) {
+            $activeMed = Med::where('med_number', $selectedMedNumber)->first();
+        }
+
+        if (! $activeMed && $currentUser) {
+            $activeMed = Med::where('user_id', $currentUser->id)->first();
+        }
+
+        if (! $activeMed) {
+            $activeMed = Med::where('med_number', 'MED-2026-7841-9012')->first() ?? Med::first();
+        }
+
+        // 3. Favqulodda himoya: Agar bazada hali ham karta topilmasa, kafolatlangan karta yaratamiz
+        if (! $activeMed) {
+            $ownerId = $currentUser?->id ?? User::first()?->id ?? User::create([
+                'name' => 'Bemor',
+                'email' => 'patient_'.Str::random(6).'@med.uz',
+                'password' => Hash::make('password123'),
+                'role' => 'patient',
+            ])->id;
+
+            $activeMed = Med::create([
+                'user_id' => $ownerId,
+                'med_number' => 'MED-2026-7841-9012',
+                'card_type' => 'standard',
+                'status' => 'active',
+                'blood_group' => 'A(II)+',
+                'rhesus_factor' => 'positive',
+                'qr_token' => 'MED_EMG_'.strtoupper(Str::random(20)),
+                'pin_code' => Hash::make('1234'),
+                'issued_at' => now(),
+                'expires_at' => now()->addYears(10),
+            ]);
+        }
+
+        $activeMed->loadMissing([
+            'user',
+            'records.doctor',
+            'records.clinic',
+            'prescriptions.doctor',
+            'prescriptions.pharmacy',
+            'analyses.doctor',
+            'analyses.clinic',
+            'vaccinations.doctor',
+            'vaccinations.clinic',
+            'referrals.referringDoctor',
+            'referrals.referringClinic',
+            'referrals.targetClinic',
+            'accessLogs.user',
+            'appointments.doctor.clinic',
+            'appointments.clinic',
+        ]);
 
         $allMeds = Med::with('user:id,name,phone,pinfl')
             ->orderBy('id')

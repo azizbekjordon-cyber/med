@@ -5,12 +5,14 @@ namespace App\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use App\Models\Med;
 use App\Models\User;
+use Database\Seeders\MedicalSystemSeeder;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class AuthController extends Controller
@@ -32,6 +34,14 @@ class AuthController extends Controller
      */
     public function login(Request $request): JsonResponse|RedirectResponse
     {
+        if (Med::count() === 0) {
+            try {
+                (new MedicalSystemSeeder)->run();
+            } catch (\Throwable $e) {
+                Log::warning('Medical system auto-seeding in AuthController failed: '.$e->getMessage());
+            }
+        }
+
         $validated = $request->validate([
             'name' => 'nullable|string|max:255',
             'login' => 'required|string|max:255',

@@ -19,7 +19,7 @@ class MedicalSystemSeeder extends Seeder
     public function run(): void
     {
         // 1. Klinika va Muassasalar
-        $hospital1 = Clinic::create([
+        $hospital1 = Clinic::where('license_number', 'MED-LIC-008912')->first() ?? Clinic::create([
             'name' => 'Toshkent Shahar 1-son Klinik Shifoxonasi',
             'type' => 'hospital',
             'license_number' => 'MED-LIC-008912',
@@ -29,7 +29,7 @@ class MedicalSystemSeeder extends Seeder
             'is_active' => true,
         ]);
 
-        $emergencyCenter = Clinic::create([
+        $emergencyCenter = Clinic::where('license_number', 'MED-LIC-103001')->first() ?? Clinic::create([
             'name' => 'Respublika Shoshilinch Tibbiy Yordam Ilmiy Markazi (103)',
             'type' => 'emergency_center',
             'license_number' => 'MED-LIC-103001',
@@ -39,7 +39,7 @@ class MedicalSystemSeeder extends Seeder
             'is_active' => true,
         ]);
 
-        $polyclinic = Clinic::create([
+        $polyclinic = Clinic::where('license_number', 'MED-LIC-051022')->first() ?? Clinic::create([
             'name' => 'Yunusobod Tuman 51-son Markaziy Ko\'p Tarmoqli Poliklinika',
             'type' => 'polyclinic',
             'license_number' => 'MED-LIC-051022',
@@ -49,7 +49,7 @@ class MedicalSystemSeeder extends Seeder
             'is_active' => true,
         ]);
 
-        $pharmacy = Clinic::create([
+        $pharmacy = Clinic::where('license_number', 'PHARM-LIC-9902')->first() ?? Clinic::create([
             'name' => '"Dori-Darmon" Markaziy Davlat Dorixonasi №12',
             'type' => 'pharmacy',
             'license_number' => 'PHARM-LIC-9902',
@@ -60,98 +60,113 @@ class MedicalSystemSeeder extends Seeder
         ]);
 
         // 2. Bosh Administrator va Shifokorlar
-        $admin = User::create([
-            'name' => 'Bosh Administrator (Admin)',
-            'email' => 'admin@med.uz',
-            'password' => Hash::make('password123'),
-            'phone' => '+998 90 000 00 00',
-            'pinfl' => '30101800010001',
-            'role' => 'admin',
-            'specialty' => 'Tizim Bosh Boshqaruvchisi',
-            'birth_date' => '1980-01-01',
-            'gender' => 'male',
-        ]);
+        $admin = User::where('email', 'admin@med.uz')
+            ->orWhere('pinfl', '30101800010001')
+            ->first() ?? User::create([
+                'name' => 'Bosh Administrator (Admin)',
+                'email' => 'admin@med.uz',
+                'password' => Hash::make('password123'),
+                'phone' => '+998 90 000 00 00',
+                'pinfl' => '30101800010001',
+                'role' => 'admin',
+                'specialty' => 'Tizim Bosh Boshqaruvchisi',
+                'birth_date' => '1980-01-01',
+                'gender' => 'male',
+            ]);
 
-        $doctor1 = User::create([
-            'name' => 'Dr. Rustam Yusupov',
-            'email' => 'yusupov@med.uz',
-            'password' => Hash::make('password123'),
-            'phone' => '+998 90 911 22 33',
-            'pinfl' => '31405820010014',
-            'role' => 'doctor',
-            'specialty' => 'Kardiolog (Oliy toifa)',
-            'doctor_license' => 'DOC-CARDIO-7721',
-            'clinic_id' => $hospital1->id,
-            'birth_date' => '1982-05-14',
-            'gender' => 'male',
-        ]);
+        $doctor1 = User::where('email', 'yusupov@med.uz')
+            ->orWhere('pinfl', '31405820010014')
+            ->first() ?? User::create([
+                'name' => 'Dr. Rustam Yusupov',
+                'email' => 'yusupov@med.uz',
+                'password' => Hash::make('password123'),
+                'phone' => '+998 90 911 22 33',
+                'pinfl' => '31405820010014',
+                'role' => 'doctor',
+                'specialty' => 'Kardiolog (Oliy toifa)',
+                'doctor_license' => 'DOC-CARDIO-7721',
+                'clinic_id' => $hospital1->id,
+                'birth_date' => '1982-05-14',
+                'gender' => 'male',
+            ]);
 
-        $doctor2 = User::create([
-            'name' => 'Dr. Umida Rahimova',
-            'email' => 'rahimova@med.uz',
-            'password' => Hash::make('password123'),
-            'phone' => '+998 91 333 44 55',
-            'pinfl' => '42207860020038',
-            'role' => 'doctor',
-            'specialty' => 'Umumiy amaliyot shifokori (Terapevt)',
-            'doctor_license' => 'DOC-THERAP-4412',
-            'clinic_id' => $polyclinic->id,
-            'birth_date' => '1986-07-22',
-            'gender' => 'female',
-        ]);
+        $doctor2 = User::where('email', 'rahimova@med.uz')
+            ->orWhere('pinfl', '42207860020038')
+            ->first() ?? User::create([
+                'name' => 'Dr. Umida Rahimova',
+                'email' => 'rahimova@med.uz',
+                'password' => Hash::make('password123'),
+                'phone' => '+998 91 333 44 55',
+                'pinfl' => '42207860020038',
+                'role' => 'doctor',
+                'specialty' => 'Umumiy amaliyot shifokori (Terapevt)',
+                'doctor_license' => 'DOC-THERAP-4412',
+                'clinic_id' => $polyclinic->id,
+                'birth_date' => '1986-07-22',
+                'gender' => 'female',
+            ]);
 
-        $emergencyDoctor = User::create([
-            'name' => 'Dr. Botir Ergashev',
-            'email' => '103@med.uz',
-            'password' => Hash::make('password123'),
-            'phone' => '+998 93 555 10 30',
-            'pinfl' => '31908850010099',
-            'role' => 'emergency_103',
-            'specialty' => 'Reanimatolog-Shoshilinch tibbiy yordam shifokori',
-            'doctor_license' => 'DOC-EMERG-1034',
-            'clinic_id' => $emergencyCenter->id,
-            'birth_date' => '1985-08-19',
-            'gender' => 'male',
-        ]);
+        $emergencyDoctor = User::where('email', '103@med.uz')
+            ->orWhere('pinfl', '31908850010099')
+            ->first() ?? User::create([
+                'name' => 'Dr. Botir Ergashev',
+                'email' => '103@med.uz',
+                'password' => Hash::make('password123'),
+                'phone' => '+998 93 555 10 30',
+                'pinfl' => '31908850010099',
+                'role' => 'emergency_103',
+                'specialty' => 'Reanimatolog-Shoshilinch tibbiy yordam shifokori',
+                'doctor_license' => 'DOC-EMERG-1034',
+                'clinic_id' => $emergencyCenter->id,
+                'birth_date' => '1985-08-19',
+                'gender' => 'male',
+            ]);
 
-        $pharmacist = User::create([
-            'name' => 'Kamola Odilova',
-            'email' => 'apteka@med.uz',
-            'password' => Hash::make('password123'),
-            'phone' => '+998 90 777 88 99',
-            'pinfl' => '41509920030041',
-            'role' => 'pharmacist',
-            'specialty' => 'Katta provizor',
-            'clinic_id' => $pharmacy->id,
-            'birth_date' => '1992-09-15',
-            'gender' => 'female',
-        ]);
+        $pharmacist = User::where('email', 'apteka@med.uz')
+            ->orWhere('pinfl', '41509920030041')
+            ->first() ?? User::create([
+                'name' => 'Kamola Odilova',
+                'email' => 'apteka@med.uz',
+                'password' => Hash::make('password123'),
+                'phone' => '+998 90 777 88 99',
+                'pinfl' => '41509920030041',
+                'role' => 'pharmacist',
+                'specialty' => 'Katta provizor',
+                'clinic_id' => $pharmacy->id,
+                'birth_date' => '1992-09-15',
+                'gender' => 'female',
+            ]);
 
         // 3. Fuqarolar / Bemorlar va Med-Kartalar
-        $userAzizbek = User::create([
-            'name' => 'Azizbek Baxodirov',
-            'email' => 'azizbek@med.uz',
-            'password' => Hash::make('azizbek123'),
-            'phone' => '+998 910226667',
-            'pinfl' => '32509820010025',
-            'role' => 'admin',
-            'specialty' => 'Tizim Bosh Administratori',
-            'birth_date' => '1995-05-14',
-            'gender' => 'male',
-        ]);
+        $userAzizbek = User::where('email', 'azizbek@med.uz')
+            ->orWhere('pinfl', '32509820010025')
+            ->orWhere('phone', '+998 910226667')
+            ->first() ?? User::create([
+                'name' => 'Azizbek Baxodirov',
+                'email' => 'azizbek@med.uz',
+                'password' => Hash::make('azizbek123'),
+                'phone' => '+998 910226667',
+                'pinfl' => '32509820010025',
+                'role' => 'admin',
+                'specialty' => 'Tizim Bosh Administratori',
+                'birth_date' => '1995-05-14',
+                'gender' => 'male',
+            ]);
 
-        $patient1 = User::create([
-            'name' => 'Alisher Qodirov',
-            'email' => 'alisher@med.uz',
-            'password' => Hash::make('password123'),
-            'phone' => '+998 90 123 45 67',
-            'pinfl' => '32509820010099',
-            'role' => 'patient',
-            'birth_date' => '1982-09-25',
-            'gender' => 'male',
-        ]);
+        $patient1 = User::where('email', 'alisher@med.uz')
+            ->orWhere('pinfl', '32509820010099')
+            ->first() ?? User::create([
+                'name' => 'Alisher Qodirov',
+                'email' => 'alisher@med.uz',
+                'password' => Hash::make('password123'),
+                'phone' => '+998 90 123 45 67',
+                'pinfl' => '32509820010099',
+                'role' => 'patient',
+                'birth_date' => '1982-09-25',
+                'gender' => 'male',
+            ]);
 
-        $med1 = Med::create([
+        $med1 = Med::where('med_number', 'MED-2026-7841-9012')->first() ?? Med::create([
             'user_id' => $userAzizbek->id,
             'med_number' => 'MED-2026-7841-9012',
             'card_type' => 'standard',
@@ -182,7 +197,7 @@ class MedicalSystemSeeder extends Seeder
         ]);
 
         // 4. Med Records (Ko'riklar va Tashxislar)
-        $record1 = MedRecord::create([
+        $record1 = MedRecord::where('med_id', $med1->id)->where('icd10_code', 'I10')->first() ?? MedRecord::create([
             'med_id' => $med1->id,
             'doctor_id' => $doctor1->id,
             'clinic_id' => $hospital1->id,
@@ -204,7 +219,7 @@ class MedicalSystemSeeder extends Seeder
             'visit_date' => now()->subDays(5),
         ]);
 
-        $record2 = MedRecord::create([
+        $record2 = MedRecord::where('med_id', $med1->id)->where('icd10_code', 'J06.9')->first() ?? MedRecord::create([
             'med_id' => $med1->id,
             'doctor_id' => $doctor2->id,
             'clinic_id' => $polyclinic->id,
@@ -224,7 +239,7 @@ class MedicalSystemSeeder extends Seeder
         ]);
 
         // 5. Prescriptions (Retseptlar)
-        MedPrescription::create([
+        MedPrescription::where('prescription_number', 'RX-2026-99014')->first() ?? MedPrescription::create([
             'med_id' => $med1->id,
             'med_record_id' => $record1->id,
             'doctor_id' => $doctor1->id,
@@ -237,7 +252,7 @@ class MedicalSystemSeeder extends Seeder
             'status' => 'active',
         ]);
 
-        MedPrescription::create([
+        MedPrescription::where('prescription_number', 'RX-2026-44102')->first() ?? MedPrescription::create([
             'med_id' => $med1->id,
             'med_record_id' => $record1->id,
             'doctor_id' => $doctor1->id,
@@ -252,7 +267,7 @@ class MedicalSystemSeeder extends Seeder
             'dispensed_at' => now()->subDays(3),
         ]);
 
-        MedPrescription::create([
+        MedPrescription::where('prescription_number', 'RX-2026-11883')->first() ?? MedPrescription::create([
             'med_id' => $med1->id,
             'med_record_id' => $record2->id,
             'doctor_id' => $doctor2->id,
@@ -266,7 +281,7 @@ class MedicalSystemSeeder extends Seeder
         ]);
 
         // 6. Analyses (Laboratoriya va Diagnostika)
-        MedAnalysis::create([
+        MedAnalysis::where('med_id', $med1->id)->where('analysis_type', 'blood')->first() ?? MedAnalysis::create([
             'med_id' => $med1->id,
             'doctor_id' => $doctor1->id,
             'clinic_id' => $hospital1->id,
@@ -284,7 +299,7 @@ class MedicalSystemSeeder extends Seeder
             'performed_at' => now()->subDays(6),
         ]);
 
-        MedAnalysis::create([
+        MedAnalysis::where('med_id', $med1->id)->where('analysis_type', 'biochemistry')->first() ?? MedAnalysis::create([
             'med_id' => $med1->id,
             'doctor_id' => $doctor1->id,
             'clinic_id' => $hospital1->id,
@@ -302,7 +317,7 @@ class MedicalSystemSeeder extends Seeder
             'performed_at' => now()->subDays(6),
         ]);
 
-        MedAnalysis::create([
+        MedAnalysis::where('med_id', $med1->id)->where('analysis_type', 'ecg')->first() ?? MedAnalysis::create([
             'med_id' => $med1->id,
             'doctor_id' => $doctor1->id,
             'clinic_id' => $hospital1->id,
@@ -319,7 +334,7 @@ class MedicalSystemSeeder extends Seeder
         ]);
 
         // 7. Vaccinations (Emlashlar)
-        MedVaccination::create([
+        MedVaccination::where('med_id', $med1->id)->where('batch_number', 'HEP-B-2023-889')->first() ?? MedVaccination::create([
             'med_id' => $med1->id,
             'vaccine_name' => 'Gepatit B ga qarshi vaksina (Engerix-B)',
             'dose_number' => 3,
@@ -330,7 +345,7 @@ class MedicalSystemSeeder extends Seeder
             'notes' => 'To\'liq kurs yakunlangan. Asoratsiz o\'tgan.',
         ]);
 
-        MedVaccination::create([
+        MedVaccination::where('med_id', $med1->id)->where('batch_number', 'FLU-2025-091')->first() ?? MedVaccination::create([
             'med_id' => $med1->id,
             'vaccine_name' => 'Mavsumiy grippga qarshi (Grippol Plus)',
             'dose_number' => 1,
@@ -343,7 +358,7 @@ class MedicalSystemSeeder extends Seeder
         ]);
 
         // 8. Referrals (Yo'llanmalar)
-        MedReferral::create([
+        MedReferral::where('med_id', $med1->id)->where('specialty_needed', 'Kardiolog')->first() ?? MedReferral::create([
             'med_id' => $med1->id,
             'referring_doctor_id' => $doctor2->id,
             'referring_clinic_id' => $polyclinic->id,
@@ -355,7 +370,7 @@ class MedicalSystemSeeder extends Seeder
             'expires_at' => now()->addDays(30),
         ]);
 
-        MedReferral::create([
+        MedReferral::where('med_id', $med1->id)->where('specialty_needed', 'Nevrolog')->first() ?? MedReferral::create([
             'med_id' => $med1->id,
             'referring_doctor_id' => $doctor1->id,
             'referring_clinic_id' => $hospital1->id,
@@ -368,7 +383,7 @@ class MedicalSystemSeeder extends Seeder
         ]);
 
         // 9. Doctor Appointments (E-Navbat va Talonlar)
-        DoctorAppointment::create([
+        DoctorAppointment::where('ticket_number', 'NAV-'.date('Y').'-001')->first() ?? DoctorAppointment::create([
             'med_id' => $med1->id,
             'patient_id' => $patient1->id,
             'doctor_id' => $doctor1->id,
@@ -382,7 +397,7 @@ class MedicalSystemSeeder extends Seeder
             'status' => 'pending',
         ]);
 
-        DoctorAppointment::create([
+        DoctorAppointment::where('ticket_number', 'NAV-'.date('Y').'-003')->first() ?? DoctorAppointment::create([
             'med_id' => $med1->id,
             'patient_id' => $patient1->id,
             'doctor_id' => $doctor2->id,
@@ -397,9 +412,11 @@ class MedicalSystemSeeder extends Seeder
         ]);
 
         // 10. Access Logs (Audit jurnali)
-        $med1->logAccess($patient1->id, 'patient_view', ['source' => 'web_portal', 'device' => 'Desktop Chrome']);
-        $med1->logAccess($doctor1->id, 'doctor_full_view', ['specialty' => 'Kardiolog', 'verification' => 'pin_verified']);
-        $med1->logAccess($emergencyDoctor->id, 'emergency_qr_view', ['brigade' => '103-Toshkent-12', 'access_mode' => 'rapid_triage']);
-        $med1->logAccess($pharmacist->id, 'prescription_dispense', ['prescription_number' => 'RX-2026-44102', 'pharmacy' => 'Dori-Darmon №12']);
+        if ($med1->accessLogs()->count() === 0) {
+            $med1->logAccess($patient1->id, 'patient_view', ['source' => 'web_portal', 'device' => 'Desktop Chrome']);
+            $med1->logAccess($doctor1->id, 'doctor_full_view', ['specialty' => 'Kardiolog', 'verification' => 'pin_verified']);
+            $med1->logAccess($emergencyDoctor->id, 'emergency_qr_view', ['brigade' => '103-Toshkent-12', 'access_mode' => 'rapid_triage']);
+            $med1->logAccess($pharmacist->id, 'prescription_dispense', ['prescription_number' => 'RX-2026-44102', 'pharmacy' => 'Dori-Darmon №12']);
+        }
     }
 }

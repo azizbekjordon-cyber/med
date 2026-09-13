@@ -1388,7 +1388,7 @@
                 <span>🎫</span> Online Navbat
             </button>
             <!-- Kasalxona & Dorixona QR Scan Portal Trigger -->
-            <a href="{{ route('med.scan', $activeMed->qr_token) }}" target="_blank" class="btn btn-secondary" style="border-color: rgba(56, 189, 248, 0.4); color: var(--primary-light);">
+            <a href="{{ route('med.scan', $activeMed?->qr_token ?? 'default') }}" target="_blank" class="btn btn-secondary" style="border-color: rgba(56, 189, 248, 0.4); color: var(--primary-light);">
                 <span>📱</span> Kasalxona & Dorixona QR Pass
             </a>
             <!-- 103 Emergency Triage Modal Trigger -->
@@ -1561,7 +1561,7 @@
                 <div class="qr-action-card">
                     <div style="display: flex; gap: 1rem; align-items: center;">
                         <div class="qr-thumb-wrapper" onclick="openQrModal()" title="Kattalashtirish uchun bosing" style="cursor: pointer;">
-                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={{ urlencode(route('med.scan', $activeMed->qr_token)) }}" alt="QR Code" id="cardQrThumb" onclick="openQrModal()" style="cursor: pointer;">
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={{ urlencode(route('med.scan', $activeMed?->qr_token ?? 'default')) }}" alt="QR Code" id="cardQrThumb" onclick="openQrModal()" style="cursor: pointer;">
                         </div>
                         <div style="flex: 1;">
                             <div style="font-size: 0.72rem; color: var(--primary-light); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">
@@ -1577,7 +1577,7 @@
                                 <button type="button" class="btn btn-primary" onclick="openQrModal()" style="padding: 6px 14px; font-size: 0.8rem; font-weight: 700; box-shadow: 0 4px 15px var(--primary-glow);">
                                     <span>🔍</span> QR Kattalashtirish
                                 </button>
-                                <a href="{{ route('med.scan', $activeMed->qr_token) }}" target="_blank" class="btn btn-secondary" style="padding: 6px 10px; font-size: 0.78rem;">
+                                <a href="{{ route('med.scan', $activeMed?->qr_token ?? 'default') }}" target="_blank" class="btn btn-secondary" style="padding: 6px 10px; font-size: 0.78rem;">
                                     <span>📱</span> Skaner Sahifasi
                                 </a>
                             </div>
@@ -2734,7 +2734,7 @@
             </p>
 
             <div id="qrImgBox" onclick="toggleQrZoom()" title="Kattalashtirish / Kichraytirish uchun bosing" style="background: #fff; padding: 1.25rem; border-radius: 18px; display: inline-block; box-shadow: 0 15px 35px rgba(0,0,0,0.6); margin-bottom: 0.75rem; cursor: zoom-in; transition: all 0.3s ease;">
-                <img id="qrModalImg" src="https://api.qrserver.com/v1/create-qr-code/?size=450x450&data={{ urlencode(route('med.scan', $activeMed->qr_token)) }}" alt="QR Code" style="display: block; width: 310px; height: 310px; max-width: 80vw; max-height: 80vw; transition: all 0.3s ease;">
+                <img id="qrModalImg" src="https://api.qrserver.com/v1/create-qr-code/?size=450x450&data={{ urlencode(route('med.scan', $activeMed?->qr_token ?? 'default')) }}" alt="QR Code" style="display: block; width: 310px; height: 310px; max-width: 80vw; max-height: 80vw; transition: all 0.3s ease;">
             </div>
 
             <div style="margin-bottom: 1.25rem;">
@@ -2747,13 +2747,13 @@
                 <div style="color: var(--primary-light); font-weight: 700; margin-bottom: 2px;">
                     🔗 Skaner Havolasi:
                 </div>
-                <a href="{{ route('med.scan', $activeMed->qr_token) }}" target="_blank" style="color: #cbd5e1; word-break: break-all; text-decoration: none; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;">
-                    {{ route('med.scan', $activeMed->qr_token) }}
+                <a href="{{ route('med.scan', $activeMed?->qr_token ?? 'default') }}" target="_blank" style="color: #cbd5e1; word-break: break-all; text-decoration: none; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;">
+                    {{ route('med.scan', $activeMed?->qr_token ?? 'default') }}
                 </a>
             </div>
 
             <div style="display: flex; gap: 0.6rem; justify-content: center; flex-wrap: wrap;">
-                <a href="{{ route('med.scan', $activeMed->qr_token) }}" target="_blank" class="btn btn-primary">
+                <a href="{{ route('med.scan', $activeMed?->qr_token ?? 'default') }}" target="_blank" class="btn btn-primary">
                     <span>📱</span> Skaner Sahifasini Ochish
                 </a>
                 <button type="button" class="btn btn-secondary" onclick="shareQrTelegram()" style="background: rgba(14, 165, 233, 0.15); border-color: rgba(56, 189, 248, 0.4); color: #38bdf8;">
@@ -2982,7 +2982,7 @@
                         </div>
                     </div>
                     <div style="text-align: right;">
-                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data={{ urlencode(route('med.scan', $activeMed->qr_token)) }}" alt="QR" style="width: 75px; height: 75px; border-radius: 8px; background: #fff; padding: 4px; display: inline-block;">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data={{ urlencode(route('med.scan', $activeMed?->qr_token ?? 'default')) }}" alt="QR" style="width: 75px; height: 75px; border-radius: 8px; background: #fff; padding: 4px; display: inline-block;">
                     </div>
                 </div>
 
@@ -3038,7 +3038,7 @@
                 <div style="display: flex; justify-content: space-between; align-items: flex-end; border-top: 1px dashed var(--border-color); padding-top: 1rem; margin-top: 1.25rem;">
                     <div style="font-size: 0.72rem; color: var(--text-dim);">
                         Hujjat O'zbekiston E-Health yagona ma'lumotlar bazasi orqali generatsiya qilindi.<br>
-                        Verifikatsiya: <span style="color: #38bdf8;">{{ route('med.scan', $activeMed->qr_token) }}</span>
+                        Verifikatsiya: <span style="color: #38bdf8;">{{ route('med.scan', $activeMed?->qr_token ?? 'default') }}</span>
                     </div>
                     <div style="border: 2px solid #10b981; color: #34d399; font-weight: 900; font-size: 0.7rem; padding: 6px 12px; border-radius: 8px; text-transform: uppercase; letter-spacing: 1px; transform: rotate(-3deg); box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);">
                         ✓ ELEKTRON TASDIQLANGAN
@@ -3113,15 +3113,15 @@
         }
 
         function printQrPass() {
-            const scanUrl = "{{ route('med.scan', $activeMed->qr_token) }}";
+            const scanUrl = "{{ route('med.scan', $activeMed?->qr_token ?? 'default') }}";
             window.open(scanUrl, '_blank');
         }
 
         function downloadQrPng() {
             const img = document.getElementById('qrModalImg');
             const a = document.createElement('a');
-            a.href = img ? img.src : "https://api.qrserver.com/v1/create-qr-code/?size=500x500&data={{ urlencode(route('med.scan', $activeMed->qr_token)) }}";
-            a.download = "MED_QR_{{ $activeMed->med_number }}.png";
+            a.href = img ? img.src : "https://api.qrserver.com/v1/create-qr-code/?size=500x500&data={{ urlencode(route('med.scan', $activeMed?->qr_token ?? 'default')) }}";
+            a.download = "MED_QR_{{ $activeMed?->med_number ?? 'CARD' }}.png";
             a.target = '_blank';
             document.body.appendChild(a);
             a.click();
@@ -3296,7 +3296,7 @@
             content.style.display = 'none';
 
             try {
-                const response = await fetch('/api/v1/emergency/triage/{{ $activeMed->qr_token }}');
+                const response = await fetch('/api/v1/emergency/triage/{{ $activeMed?->qr_token ?? 'default' }}');
                 const result = await response.json();
 
                 if (result.status === 'success') {
@@ -3467,14 +3467,14 @@
         }
 
         function shareQrTelegram() {
-            const scanUrl = "{{ route('med.scan', $activeMed->qr_token) }}";
-            const text = `📱 *{{ $activeMed->user->name }} ning Raqamli Med-Karta QR-Pass kodi*:\n\nKasalxona shifokorlari va dorixonalar ushbu havola orqali med-kartani ko'rishlari va retsept bo'yicha dori berishlari mumkin:\n${scanUrl}`;
+            const scanUrl = "{{ route('med.scan', $activeMed?->qr_token ?? 'default') }}";
+            const text = `📱 *{{ $activeMed->user?->name ?? 'Bemor' }} ning Raqamli Med-Karta QR-Pass kodi*:\n\nKasalxona shifokorlari va dorixonalar ushbu havola orqali med-kartani ko'rishlari va retsept bo'yicha dori berishlari mumkin:\n${scanUrl}`;
             window.open(`https://t.me/share/url?url=${encodeURIComponent(scanUrl)}&text=${encodeURIComponent(text)}`, '_blank');
         }
 
         function sharePassportTelegram() {
-            const text = `📄 *{{ $activeMed->user->name }} — Elektron Tibbiy Pasport*\n\nQon guruhi: {{ $activeMed->blood_group }}\nID: {{ $activeMed->med_number }}\nJSHSHIR: {{ $activeMed->user->pinfl ?? '32509820010025' }}\n\nRasmiy elektron tibbiy ma'lumotlar bazasi.`;
-            const scanUrl = "{{ route('med.scan', $activeMed->qr_token) }}";
+            const text = `📄 *{{ $activeMed->user?->name ?? 'Bemor' }} — Elektron Tibbiy Pasport*\n\nQon guruhi: {{ $activeMed?->blood_group }}\nID: {{ $activeMed?->med_number }}\nJSHSHIR: {{ $activeMed?->user?->pinfl ?? '32509820010025' }}\n\nRasmiy elektron tibbiy ma'lumotlar bazasi.`;
+            const scanUrl = "{{ route('med.scan', $activeMed?->qr_token ?? 'default') }}";
             window.open(`https://t.me/share/url?url=${encodeURIComponent(scanUrl)}&text=${encodeURIComponent(text)}`, '_blank');
         }
 
